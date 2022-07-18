@@ -30,7 +30,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage>{
-  var file = File("${Directory.current.path}\\main.html").readAsStringSync();
+  //var file = File("${Directory.current.path}\\assets\\main.html").readAsStringSync();
+  var file = File("${Directory.current.path}\\data\\flutter_assets\\assets\\main.html").readAsStringSync();
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -38,7 +39,7 @@ class _MyHomePageState extends State<MyHomePage>{
         title: Text(widget.title),
       ),
       drawer: Drawer(
-        child: Column(
+        child: ListView(
           children: <Widget>[
             ElevatedButton(
               child: const Text("Event"),
@@ -61,7 +62,11 @@ class _MyHomePageState extends State<MyHomePage>{
           ]
         )
       ),
-      body: Html(data: file),
+      body: ListView(
+        children: <Widget>[
+          Html(data: file),
+        ],
+      ), 
     );
   }
 }
