@@ -11,15 +11,19 @@ class Drive extends ffi.Struct{
 
 typedef GetNumberNative = Drive Function(ffi.Int i);
 typedef GetNumber =  Drive Function(int i);
+typedef GetNumberFromLetterNative = Drive Function(ffi.Pointer<pffi.Utf8> letter);
+typedef GetNumberFromLetter = Drive Function(ffi.Pointer<pffi.Utf8> letter);
 typedef GetLengthNative = ffi.Int Function();
 typedef GetLength =  int Function();
 typedef FindMyProcNative = ffi.Bool Function();
 typedef FindMyProc = bool Function();
 typedef MediaNative = ffi.Bool Function(ffi.Pointer<pffi.Utf8> media, ffi.Bool signal);
 typedef Media = bool Function(ffi.Pointer<pffi.Utf8> media, bool signal);
+typedef CopyDirNative = ffi.Void Function(ffi.Pointer<pffi.Utf8> from, ffi.Pointer<pffi.Utf8> to);
+typedef CopyDir = void Function(ffi.Pointer<pffi.Utf8> from, ffi.Pointer<pffi.Utf8> to);
 
-final cppLibsPath = path.windows.join(Directory.current.path, 'data\\flutter_assets\\assets\\cpp_libs\\process_monitor.dll');
-//final cppLibsPath = path.windows.join(Directory.current.path, 'assets\\cpp_libs\\process_monitor.dll');
+//final cppLibsPath = path.windows.join(Directory.current.path, 'data\\flutter_assets\\assets\\cpp_libs\\process_monitor.dll');
+final cppLibsPath = path.windows.join(Directory.current.path, 'assets\\cpp_libs\\process_monitor.dll');
 
 final cppLibsDll = ffi.DynamicLibrary.open(cppLibsPath);
 
@@ -80,9 +84,20 @@ class Controller{
     return buffer;
   }
 
+  final GetNumberFromLetter getnumberfromletter = cppLibsDll.lookupFunction<GetNumberFromLetterNative, GetNumberFromLetter>('getNumberFromLetter');
+  Drive getNumberFromLetter(String letter){
+    var buffer = getnumberfromletter(letter.toNativeUtf8());
+    return buffer;
+  }
+
   final GetLength getlength = cppLibsDll.lookupFunction<GetLengthNative, GetLength>('getLength');
   int getLength(){
     var buffer = getlength();
     return buffer;
+  }
+
+  final CopyDir copydir = cppLibsDll.lookupFunction<CopyDirNative, CopyDir>('copyDir');
+  void copyDir(String from, String to){
+    copydir(from.toNativeUtf8(), to.toNativeUtf8());
   }
 }

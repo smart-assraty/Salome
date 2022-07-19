@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'dart:io' show Process, File, Directory;
+import 'dart:io' show File, Directory;
 import 'controller.dart' as control;
 
-class PlannerPage extends StatefulWidget {
+class PlannerPage extends StatefulWidget { 
   const PlannerPage({Key? key}) : super(key: key);
   final String title = "Planner";
 
@@ -17,6 +17,7 @@ class PlannerPageState extends State<PlannerPage> {
   TextEditingController dayController = TextEditingController();
   late String diskToBackup = "not set";
   late String backupToDisk = "not set";
+  late control.Drive d;
   late String dayToBackup = "not set";
   late TimeOfDay time = TimeOfDay.now();
   control.Controller c = control.Controller();
@@ -92,24 +93,14 @@ class PlannerPageState extends State<PlannerPage> {
                         diskToBackup = diskController.text;
                         backupToDisk = backupController.text;
                         dayToBackup = dayController.text;
+                        d = c.getNumberFromLetter(backupToDisk.substring(0, 2));
                       });
-                      File("${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\config.ini").writeAsString("wayToFiles=$diskToBackup\nwayToDisk=$backupToDisk\ndisk=${backupToDisk[0]}:\nday=$dayToBackup\nmytime=${time.hour}:${time.minute}\nscript=${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\Script%231.bat");
-                      //File("${Directory.current.path}\\assets\\scripts\\config.ini").writeAsString("wayToFiles=$diskToBackup\nwayToDisk=$backupToDisk\ndisk=${backupToDisk[0]}:\nday=$dayToBackup\nmytime=${time.hour}:${time.minute}\nscript=${Directory.current.path}\\assets\\scripts\\Script#1.bat");
-                      File("${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\Script%231.bat").writeAsString('@rem Script for Nikolai\n@echo off\nfor /f "tokens=1,2 delims==" %%a in (${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\config.ini) do (\n    if %%a==wayToFiles set wayToFiles=%%b\n    if %%a==wayToDisk set wayToDisk=%%b\n    if %%a==disk set disk=%%b\n)\nstart ${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\load.exe \\\\.\\%disk%\nxcopy %wayToFiles%\\ %wayToDisk%\nstart ${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\eject.exe \\\\.\\%disk%');
-                      //File("${Directory.current.path}\\assets\\scripts\\Script#1.bat").writeAsString('@rem Script for Nikolai\n@echo off\nfor /f "tokens=1,2 delims==" %%a in (${Directory.current.path}\\assets\\scripts\\config.ini) do (\n    if %%a==wayToFiles set wayToFiles=%%b\n    if %%a==wayToDisk set wayToDisk=%%b\n    if %%a==disk set disk=%%b\n)\nstart ${Directory.current.path}\\assets\\scripts\\load.exe \\\\.\\%disk%\nxcopy %wayToFiles%\\ %wayToDisk%\nstart ${Directory.current.path}\\assets\\scripts\\eject.exe \\\\.\\%disk%');
+                      //File("${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\config.ini").writeAsString("wayToFiles=$diskToBackup\nwayToDisk=$backupToDisk\ndisk=${backupToDisk[0]}:\nday=$dayToBackup\nmytime=${time.hour}:${time.minute}\nscript=${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\Script%231.bat");
+                      File("${Directory.current.path}\\assets\\scripts\\config.ini").writeAsString("wayToFiles=$diskToBackup\nwayToDisk=$backupToDisk\ndisk=${backupToDisk[0]}:\nday=$dayToBackup\nmytime=${time.hour}:${time.minute}\nscript=${Directory.current.path}\\assets\\scripts\\Script#1.bat");
+                      //File("${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\Script%231.bat").writeAsString('@rem Script for Nikolai\n@echo off\nfor /f "tokens=1,2 delims==" %%a in (${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\config.ini) do (\n    if %%a==wayToFiles set wayToFiles=%%b\n    if %%a==wayToDisk set wayToDisk=%%b\n    if %%a==disk set disk=%%b\n)\nstart ${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\load.exe \\\\.\\%disk%\nxcopy %wayToFiles%\\ %wayToDisk%\nstart ${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\eject.exe \\\\.\\%disk%');
+                      File("${Directory.current.path}\\assets\\scripts\\Script#1.bat").writeAsString('@rem Script for Nikolai\n@echo off\nfor /f "tokens=1,2 delims==" %%a in (${Directory.current.path}\\assets\\scripts\\config.ini) do (\n    if %%a==wayToFiles set wayToFiles=%%b\n    if %%a==wayToDisk set wayToDisk=%%b\n    if %%a==disk set disk=%%b\n)\nstart ${Directory.current.path}\\assets\\scripts\\load.exe \\\\.\\%disk%\nxcopy %wayToFiles%\\ %wayToDisk%\nstart ${Directory.current.path}\\assets\\scripts\\eject.exe \\\\.\\%disk%');
                       Navigator.pop(context);
-                      c.manageMedia(backupToDisk, true);
-                      Process.run("${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\Script%231.bat", []);
-                      //Process.run("${Directory.current.path}\\assets\\scripts\\Script#1.bat", []);
-                      c.manageMedia(backupToDisk, false);
-                      showDialog(
-                        context: context, 
-                        builder: (BuildContext context){
-                          return const AlertDialog(
-                            content: Text("Success"),
-                          );
-                        }
-                      );
+                      checkSerial();
                     }
                   }, 
                   child: const Text("Confirm")
@@ -131,6 +122,36 @@ class PlannerPageState extends State<PlannerPage> {
       setState(() {
         time = timeOfDay;
       });
+    }
+  }
+
+  void checkSerial(){
+    c.getButtons();
+    int length = c.getLength();
+    for(int i = 0; i < length; ++i){
+      if(c.drives[i].serialNumber == d.serialNumber){
+        c.manageMedia(backupToDisk.substring(0, 2), true);
+        c.copyDir(diskToBackup, backupToDisk);
+        c.manageMedia(backupToDisk.substring(0, 2), false);
+        showDialog(
+          context: context, 
+          builder: (BuildContext context){
+            return const AlertDialog(
+              content: Text("Success"),
+            );
+          }
+        );
+      }
+      else{
+        showDialog(
+          context: context, 
+          builder: (BuildContext context){
+            return const AlertDialog(
+              content: Text("Fail"),
+            );
+          }
+        );
+      }
     }
   }
 }
