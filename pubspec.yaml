@@ -66,11 +66,6 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/main.html
-    - assets/scripts/config.ini
-    - assets/scripts/schScript.bat
-    - assets/scripts/Script#1.bat
-    - assets/scripts/load.exe
-    - assets/scripts/eject.exe
     - assets/cpp_libs/process_monitor.dll
 
   # An image asset can refer to one or more resolution-specific "variants", see
