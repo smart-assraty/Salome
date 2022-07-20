@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:io' show Process, File, Directory;
 import 'controller.dart' as control;
 
 class PlannerPage extends StatefulWidget { 
@@ -158,7 +159,9 @@ class PlannerPageState extends State<PlannerPage> {
             }
           );
         }
-        c.copyDir(diskToBackup, backupToDisk);
+        File('data\\flutter_assets\\assets\\scripts\\config.ini').writeAsStringSync('way=$diskToBackup\ndisk=$diskToBackup\nmytime=${time.hour}:${time.minute}\nscript=${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\Tasksch.bat');
+        File('data\\flutter_assets\\assets\\scripts\\Backup.bat').writeAsStringSync('');
+        Process.run('${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\Backup.bat', []);
         if(c.manageMedia(backupToDisk.substring(0, 2), false)){
           showDialog(
             context: context, 
