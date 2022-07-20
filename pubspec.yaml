@@ -67,6 +67,11 @@ flutter:
   assets:
     - assets/main.html
     - assets/cpp_libs/process_monitor.dll
+    - assets/scripts/Backup.bat
+    - assets/scripts/config.ini
+    - assets/scripts/eject.exe
+    - assets/scripts/load.exe
+    - assets/scripts/Tasksch.bat
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

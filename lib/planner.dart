@@ -107,9 +107,8 @@ class PlannerPageState extends State<PlannerPage> {
                       if (a == 1) {
                         writeFiles();
                         //await Process.run('assets\\scripts\\Tasksch.bat', [], runInShell: true);
-                        //await Process.run('data\\flutter_assets\\assets\\scripts\\Tasksch.bat', [], runInShell: true);
+                        await Process.run('data\\flutter_assets\\assets\\scripts\\Tasksch.bat', [], runInShell: true);
                       }
-                      //media();
                     } 
                     else {
                       showDialog(
