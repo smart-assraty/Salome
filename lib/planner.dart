@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'dart:io' show Process, File, Directory;
 import 'controller.dart' as control;
 
 class PlannerPage extends StatefulWidget {
@@ -173,6 +174,7 @@ class PlannerPageState extends State<PlannerPage> {
           }
         } else {
           showDialog(
+<<<<<<< HEAD
               context: context,
               builder: (BuildContext context) {
                 return const AlertDialog(
@@ -180,6 +182,38 @@ class PlannerPageState extends State<PlannerPage> {
                 );
               });
           return 0;
+=======
+            context: context, 
+            builder: (BuildContext context){
+              return const AlertDialog(
+                content: Text("Fail load"),
+              );
+            }
+          );
+        }
+        File('data\\flutter_assets\\assets\\scripts\\config.ini').writeAsStringSync('way=$diskToBackup\ndisk=$diskToBackup\nmytime=${time.hour}:${time.minute}\nscript=${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\Tasksch.bat');
+        File('data\\flutter_assets\\assets\\scripts\\Backup.bat').writeAsStringSync('');
+        Process.run('${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\Backup.bat', []);
+        if(c.manageMedia(backupToDisk.substring(0, 2), false)){
+          showDialog(
+            context: context, 
+            builder: (BuildContext context){
+              return const AlertDialog(
+                content: Text("Success eject"),
+              );
+            }
+          );
+        }
+        else{
+          showDialog(
+            context: context, 
+            builder: (BuildContext context){
+              return const AlertDialog(
+                content: Text("Fail eject"),
+              );
+            }
+          );
+>>>>>>> f0bc0edea2181843a4955394dbae85d06cc235b5
         }
       }
     }
