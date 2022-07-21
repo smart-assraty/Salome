@@ -77,13 +77,14 @@ class PlannerPageState extends State<PlannerPage> {
                   },
                 ),
                 Container(
-                    margin: const EdgeInsets.only(top: 10.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        selectTime(context);
-                      },
-                      child: const Text("Set time"),
-                    )),
+                  margin: const EdgeInsets.only(top: 10.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      selectTime(context);
+                    },
+                    child: const Text("Set time"),
+                  ),
+                ),
                 const Spacer(),
                 ElevatedButton(
                   onPressed: () async {
@@ -104,8 +105,11 @@ class PlannerPageState extends State<PlannerPage> {
                           });
                       int a = checkSerial();
                       if (a == 1) {
-                        var result = await Process.run(
-                            'assets\\scripts\\Tasksch.bat', [],
+                        writeFiles();
+                        //await Process.run('assets\\scripts\\Tasksch.bat', [], runInShell: true);
+                        await Process.run(
+                            'data\\flutter_assets\\assets\\scripts\\Tasksch.bat',
+                            [],
                             runInShell: true);
                       }
                     } else {
@@ -146,46 +150,62 @@ class PlannerPageState extends State<PlannerPage> {
     int length = c.getLength();
     for (int i = 0; i < length; ++i) {
       if (c.drives[i].serialNumber == d.serialNumber) {
-        if (c.manageMedia(backupToDisk.substring(0, 2), true)) {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return const AlertDialog(
-                  content: Text("Success load"),
-                );
-              });
-          //c.copyDir(diskToBackup, backupToDisk);
-          if (c.manageMedia(backupToDisk.substring(0, 2), false)) {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return const AlertDialog(
-                    content: Text("Success eject"),
-                  );
-                });
-            return 1;
-          } else {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return const AlertDialog(
-                    content: Text("Fail eject"),
-                  );
-                });
-            return 0;
-          }
-        } else {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return const AlertDialog(
-                  content: Text("Fail load"),
-                );
-              });
-          return 0;
-        }
+        return 1;
       }
     }
     return 0;
+  }
+
+  void media(bool signal) {
+    if (signal == true) {
+      if (c.manageMedia(backupToDisk.substring(0, 2), true)) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return const AlertDialog(
+                content: Text("Success load"),
+              );
+            });
+      } else {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return const AlertDialog(
+                content: Text("Fail load"),
+              );
+            });
+      }
+    }
+    if (signal == false) {
+      if (c.manageMedia(backupToDisk.substring(0, 2), false)) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return const AlertDialog(
+                content: Text("Success eject"),
+              );
+            });
+      } else {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return const AlertDialog(
+                content: Text("Fail eject"),
+              );
+            });
+      }
+    }
+  }
+
+  void writeFiles() {
+    File('data\\flutter_assets\\assets\\scripts\\config.ini').writeAsStringSync(
+        'way=$diskToBackup\ndisk=$diskToBackup\nmytime=${time.hour}:${time.minute}\nscript=${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\Tasksch.bat');
+    File('data\\flutter_assets\\assets\\scripts\\Backup.bat').writeAsStringSync(
+        '@rem Event\n@echo off\nchcp 850\nfor /f "tokens=1,2 delims==" %%a in (${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\config.ini) do (\n    if %%a==mytime set mytime=%%b\n    if %%a==day set day=%%b\n)\nschtasks /create /sc weekly /d %day% /tn hardtime /sd %date:~-10% /st %mytime% /tr ${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\Backup.bat');
+    File('data\\flutter_assets\\assets\\scripts\\Backup.bat').writeAsStringSync(
+        'start \\b ${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\load.exe \\\\.\\${backupToDisk.substring(0, 2)}\nset mydate=%DATE:~3,2%-%DATE:~0,2%-%DATE:~6,4%\nxcopy /y /o /e /d:%mydate% "$diskToBackup" "$backupToDisk"\nstart \\b ${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\eject.exe \\\\.\\${backupToDisk.substring(0, 2)}');
+    /*File('assets\\scripts\\config.ini').writeAsStringSync('way=$diskToBackup\ndisk=$backupToDisk\nday=$dayToBackup\nmytime=${time.hour}:${time.minute}\n');
+    File('assets\\scripts\\Tasksch.bat').writeAsStringSync('@rem Event\n@echo off\nchcp 850\nfor /f "tokens=1,2 delims==" %%a in (${Directory.current.path}\\assets\\scripts\\config.ini) do (\n    if %%a==mytime set mytime=%%b\n    if %%a==day set day=%%b\n)\nschtasks /create /sc weekly /d %day% /tn hardtime /sd %date:~-10% /st %mytime% /tr ${Directory.current.path}\\assets\\scripts\\Backup.bat');
+    File('assets\\scripts\\Backup.bat').writeAsStringSync('start \\b ${Directory.current.path}\\assets\\scripts\\load.exe \\\\.\\${backupToDisk.substring(0, 2)}\nset mydate=%DATE:~3,2%-%DATE:~0,2%-%DATE:~6,4%\nxcopy /y /o /e /d:%mydate% "$diskToBackup" "$backupToDisk"\nstart \\b ${Directory.current.path}\\assets\\scripts\\eject.exe \\\\.\\${backupToDisk.substring(0, 2)}');*/
   }
 }
