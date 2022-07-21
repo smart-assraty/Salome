@@ -12,7 +12,7 @@ class EventPage extends StatefulWidget {
   State<EventPage> createState() => EventPageState();
 }
 
-class EventPageState extends State<EventPage>{
+class EventPageState extends State<EventPage> {
   control.Controller controller = control.Controller();
   @override
   Widget build(BuildContext context) {
@@ -26,52 +26,45 @@ class EventPageState extends State<EventPage>{
     );
   }
 
-  Widget viewController(){
+  Widget viewController() {
     controller.getButtons();
     return TimerBuilder.periodic(
-      const Duration(seconds: 1), 
+      const Duration(seconds: 1),
       builder: (context) {
         return Center(
-          child: Column(
-            children: <Widget>[
-              GridView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: controller.drives.length,
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            child: Column(children: <Widget>[
+          GridView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: controller.drives.length,
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: 140.0,
                   mainAxisSpacing: 5.0,
-                  crossAxisSpacing: 5.0
-                ),
-                itemBuilder: (context, i){
-                  return Center(
+                  crossAxisSpacing: 5.0),
+              itemBuilder: (context, i) {
+                return Center(
                     child: ElevatedButton(
-                      onPressed: (){
-                        setState(() {
-                          drive = controller.drives[i];
-                          route = true;
-                        });
-                      }, 
-                      child: Text(controller.drives[i].letter.toDartString() + controller.drives[i].serialNumber.toString()),
-                    )
-                  );
-                }
-              ),
-            ]
-          )
-        ); 
+                  onPressed: () {
+                    setState(() {
+                      drive = controller.drives[i];
+                      route = true;
+                    });
+                  },
+                  child: Text(controller.drives[i].letter.toDartString() +
+                      controller.drives[i].serialNumber.toString()),
+                ));
+              }),
+        ]));
       },
     );
   }
 
-  Widget driveController(control.Drive button){
+  Widget driveController(control.Drive button) {
     return TimerBuilder.periodic(
-      const Duration(seconds: 1), 
+      const Duration(seconds: 1),
       builder: (context) {
         controller.getProcessLog(button);
-        return Center(
-          child: Text(controller.processLog)
-        ); 
+        return Center(child: Text(controller.processLog));
       },
     );
   }
