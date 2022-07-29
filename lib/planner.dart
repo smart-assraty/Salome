@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'dart:io' show Process, File, Directory;
 import 'controller.dart' as control;
 
@@ -89,13 +90,15 @@ class PlannerPageState extends State<PlannerPage> {
                       const Spacer(),
                       ElevatedButton(
                         onPressed: () async {
+                          final Directory directory =
+                              await getApplicationDocumentsDirectory();
                           String str = '';
-                          await File('E:\\log.txt')
+                          await File('${directory.path}\\log.txt')
                               .readAsString()
                               .then((String contents) {
                             str = str + contents;
                           });
-                          final File file = File('E:\\log.txt');
+                          final File file = File('${directory.path}\\log.txt');
                           var sink = file.openWrite();
                           sink.write(str);
                           if (formkey.currentState!.validate()) {

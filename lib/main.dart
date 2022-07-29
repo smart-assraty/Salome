@@ -5,6 +5,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'dart:io' show File, Directory;
 import 'planner.dart' as planner;
 import 'event.dart' as event;
+import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -75,11 +76,14 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 void writeLog(String log) async {
+  final Directory directory = await getApplicationDocumentsDirectory();
   String str = ' ';
-  await File('E:\\log.txt').readAsString().then((String contents) {
+  await File('${directory.path}\\log.txt')
+      .readAsString()
+      .then((String contents) {
     str = str + contents;
   });
-  final File file1 = File('E:\\log.txt');
+  final File file1 = File('${directory.path}\\log.txt');
   var sink = file1.openWrite();
   sink.write(str);
   sink.write(log);
