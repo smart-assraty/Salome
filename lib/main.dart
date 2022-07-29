@@ -15,13 +15,20 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'the Salomé Beta v0.1',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'the Salomé Beta v0.1'),
-    );
+    try {
+      writeLog('Successfull returning MaterialApp!');
+      return MaterialApp(
+        title: 'the Salomé Beta v0.1',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const MyHomePage(title: 'the Salomé Beta v0.1'),
+      );
+    } on Exception catch (exception) {
+      writeLog(exception.toString());
+      writeLog('Error in MaterialApp!');
+      return ErrorWidget(exception);
+    }
   }
 }
 
@@ -40,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     try {
-      writeLog('Successfull opening Widget!\n');
+      writeLog('Successfull opening Widget Scaffold!\n');
       return Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
@@ -70,6 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     } on Exception catch (exception) {
       writeLog(exception.toString());
+      writeLog('Error in Scaffold!');
       return ErrorWidget(exception);
     }
   }
