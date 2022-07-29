@@ -27,7 +27,7 @@ typedef CopyDir = void Function(
     ffi.Pointer<pffi.Utf8> from, ffi.Pointer<pffi.Utf8> to);
 
 final cppLibsPath = path.windows.join(Directory.current.path,
-    'data\\flutter_assets\\assets\\cpp_libs\\process_monitor.dll');
+    'data/flutter_assets/assets/cpp_libs/process_monitor.dll');
 //final cppLibsPath = path.windows.join(Directory.current.path, 'assets\\cpp_libs\\process_monitor.dll');
 
 final cppLibsDll = ffi.DynamicLibrary.open(cppLibsPath);

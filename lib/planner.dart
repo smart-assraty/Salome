@@ -41,9 +41,9 @@ class PlannerPageState extends State<PlannerPage> {
                           if (value == null || value.isEmpty) {
                             return "Must be filled";
                           }
-                          RegExp reg = RegExp("^[A-Z]:");
+                          RegExp reg = RegExp("^[A-Z]:.");
                           if (!value.contains(reg)) {
-                            return "Usage: {[letter]:}";
+                            return "Usage: {[letter]:\\}";
                           }
                           return null;
                         },
@@ -56,9 +56,9 @@ class PlannerPageState extends State<PlannerPage> {
                           if (value == null || value.isEmpty) {
                             return "Must be filled";
                           }
-                          RegExp reg = RegExp("^[A-Z]:");
+                          RegExp reg = RegExp("^[A-Z]:.");
                           if (!value.contains(reg)) {
-                            return "Usage: {[letter]:}";
+                            return "Usage: {[letter]:\\}";
                           }
                           return null;
                         },
@@ -107,7 +107,7 @@ class PlannerPageState extends State<PlannerPage> {
                                   backupToDisk.substring(0, 3));
                             });
                             DateTime now = DateTime.now();
-                            sink.write('\n\nDate: $now\n');
+                            sink.write('Date: $now\n');
                             sink.write(
                                 'Info: [$diskToBackup], [$backupToDisk], [${backupToDisk.substring(0, 3)}], [$dayToBackup], [${d.serialNumber.toString()}]\n');
                             showDialog(
@@ -122,12 +122,13 @@ class PlannerPageState extends State<PlannerPage> {
                             int a = checkSerial(sink);
                             if (a == 1) {
                               var result = await Process.run(
-                                  'assets\\scripts\\Tasksch.bat', [],
+                                  'assets/scripts/Tasksch.bat', [],
                                   runInShell: true);
                               sink.write('Added to Task Schedule\n');
                             }
+                            sink.write('\n\n');
                           } else {
-                            sink.write('Process failed!\n');
+                            sink.write('Process failed!\n\n\n');
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -160,8 +161,6 @@ class PlannerPageState extends State<PlannerPage> {
     c.getButtons();
     int length = c.getLength();
     for (int i = 0; i < length; ++i) {
-      print(c.drives[i].serialNumber);
-      print(d.serialNumber);
       if (c.drives[i].serialNumber == d.serialNumber) {
         if (c.manageMedia(backupToDisk.substring(0, 2), true)) {
           sink.write('Success Load!\n');

@@ -32,7 +32,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   //var file = File("${Directory.current.path}\\assets\\main.html").readAsStringSync();
   var file =
-      File("${Directory.current.path}\\data\\flutter_assets\\assets\\main.html")
+      File("${Directory.current.path}/data/flutter_assets/assets/main.html")
           .readAsStringSync();
   @override
   Widget build(BuildContext context) {
