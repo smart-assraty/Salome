@@ -1,11 +1,9 @@
-import 'dart:developer';
-
-import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'dart:io' show File, Directory;
 import 'planner.dart' as planner;
 import 'event.dart' as event;
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,6 +16,19 @@ class MyApp extends StatelessWidget {
     try {
       writeLog('Successfull returning MaterialApp!');
       return MaterialApp(
+        builder: (BuildContext context, Widget? widget){
+          ErrorWidget.builder = (FlutterErrorDetails errorDetails){
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text("Error message"),
+              ),
+              body: Center(
+                child: Text(errorDetails.summary.toString()),
+              ),
+            );
+          };
+          return widget!;
+        },
         title: 'the Salomé Beta v0.1',
         theme: ThemeData(
           primarySwatch: Colors.blue,

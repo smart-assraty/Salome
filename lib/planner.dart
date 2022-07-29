@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io' show Process, File, Directory;
@@ -124,9 +123,7 @@ class PlannerPageState extends State<PlannerPage> {
                             sink.write('Checking Serial Number!\n');
                             int a = checkSerial(sink);
                             if (a == 1) {
-                              var result = await Process.run(
-                                  'assets/scripts/Tasksch.bat', [],
-                                  runInShell: true);
+                              await Process.run('assets/scripts/Tasksch.bat', [], runInShell: true);
                               sink.write('Added to Task Schedule\n');
                             }
                             sink.write('\n\n');
