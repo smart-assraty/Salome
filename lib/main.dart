@@ -39,6 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     try {
+      writeLog('Successfull opening Widget!\n');
       return Scaffold(
         appBar: AppBar(
           title: Text(widget.title),
@@ -67,14 +68,19 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       );
     } on Exception catch (exception) {
-      String str = ' ';
-      File('E:\\log.txt').readAsString().then((String contents) {
-        str = str + contents;
-      });
-      final File file1 = File('E:\\log.txt');
-      var sink = file1.openWrite();
-      sink.write(exception.toString());
+      writeLog(exception.toString());
       return ErrorWidget(exception);
     }
   }
+}
+
+void writeLog(String log) async {
+  String str = ' ';
+  await File('E:\\log.txt').readAsString().then((String contents) {
+    str = str + contents;
+  });
+  final File file1 = File('E:\\log.txt');
+  var sink = file1.openWrite();
+  sink.write(str);
+  sink.write(log);
 }
