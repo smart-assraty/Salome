@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'dart:io' show File, Directory;
@@ -36,32 +38,43 @@ class _MyHomePageState extends State<MyHomePage> {
           .readAsStringSync();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      drawer: Drawer(
-          child: ListView(children: <Widget>[
-        ElevatedButton(
-            child: const Text("Event"),
-            onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        const event.EventPage()))),
-        ElevatedButton(
-            child: const Text("Planner"),
-            onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        const planner.PlannerPage())))
-      ])),
-      body: ListView(
-        children: <Widget>[
-          Html(data: file),
-        ],
-      ),
-    );
+    try {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        drawer: Drawer(
+            child: ListView(children: <Widget>[
+          ElevatedButton(
+              child: const Text("Event"),
+              onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          const event.EventPage()))),
+          ElevatedButton(
+              child: const Text("Planner"),
+              onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          const planner.PlannerPage())))
+        ])),
+        body: ListView(
+          children: <Widget>[
+            Html(data: file),
+          ],
+        ),
+      );
+    } on Exception catch (exception) {
+      String str = ' ';
+      File('E:\\log.txt').readAsString().then((String contents) {
+        str = str + contents;
+      });
+      final File file1 = File('E:\\log.txt');
+      var sink = file1.openWrite();
+      sink.write(exception.toString());
+      return ErrorWidget(exception);
+    }
   }
 }
