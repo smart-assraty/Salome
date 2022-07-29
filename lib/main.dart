@@ -29,44 +29,39 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage>{
-  var file = File("${Directory.current.path}\\assets\\main.html").readAsStringSync();
-  //var file = File("${Directory.current.path}\\data\\flutter_assets\\assets\\main.html").readAsStringSync();
+class _MyHomePageState extends State<MyHomePage> {
+  //var file = File("${Directory.current.path}\\assets\\main.html").readAsStringSync();
+  var file =
+      File("${Directory.current.path}\\data\\flutter_assets\\assets\\main.html")
+          .readAsStringSync();
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
       drawer: Drawer(
-        child: ListView(
-          children: <Widget>[
-            ElevatedButton(
-              child: const Text("Event"),
-              onPressed: () => Navigator.push(
-                context, 
+          child: ListView(children: <Widget>[
+        ElevatedButton(
+            child: const Text("Event"),
+            onPressed: () => Navigator.push(
+                context,
                 MaterialPageRoute(
-                  builder: (BuildContext context) => const event.EventPage()
-                )
-              )
-            ),
-            ElevatedButton(
-              child: const Text("Planner"),
-              onPressed: () => Navigator.push(
-                context, 
+                    builder: (BuildContext context) =>
+                        const event.EventPage()))),
+        ElevatedButton(
+            child: const Text("Planner"),
+            onPressed: () => Navigator.push(
+                context,
                 MaterialPageRoute(
-                  builder: (BuildContext context) => const planner.PlannerPage()
-                )
-              )
-            )
-          ]
-        )
-      ),
+                    builder: (BuildContext context) =>
+                        const planner.PlannerPage())))
+      ])),
       body: ListView(
         children: <Widget>[
           Html(data: file),
         ],
-      ), 
+      ),
     );
   }
 }

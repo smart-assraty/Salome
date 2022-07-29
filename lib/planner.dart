@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'dart:io' show Process, File, Directory;
 import 'controller.dart' as control;
 
 class PlannerPage extends StatefulWidget {
@@ -207,5 +208,17 @@ class PlannerPageState extends State<PlannerPage> {
       }
     }
     return 0;
+  }
+
+  void writeFiles() {
+    File('data\\flutter_assets\\assets\\scripts\\config.ini').writeAsStringSync(
+        'way=$diskToBackup\ndisk=$diskToBackup\nmytime=${time.hour}:${time.minute}\nscript=${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\Tasksch.bat');
+    File('data\\flutter_assets\\assets\\scripts\\Backup.bat').writeAsStringSync(
+        '@rem Event\n@echo off\nchcp 850\nfor /f "tokens=1,2 delims==" %%a in (${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\config.ini) do (\n    if %%a==mytime set mytime=%%b\n    if %%a==day set day=%%b\n)\nschtasks /create /sc weekly /d %day% /tn hardtime /sd %date:~-10% /st %mytime% /tr ${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\Backup.bat');
+    File('data\\flutter_assets\\assets\\scripts\\Backup.bat').writeAsStringSync(
+        'start \\b ${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\load.exe \\\\.\\${backupToDisk.substring(0, 2)}\nset mydate=%DATE:~3,2%-%DATE:~0,2%-%DATE:~6,4%\nxcopy /y /o /e /d:%mydate% "$diskToBackup" "$backupToDisk"\nstart \\b ${Directory.current.path}\\data\\flutter_assets\\assets\\scripts\\eject.exe \\\\.\\${backupToDisk.substring(0, 2)}');
+    /*File('assets\\scripts\\config.ini').writeAsStringSync('way=$diskToBackup\ndisk=$backupToDisk\nday=$dayToBackup\nmytime=${time.hour}:${time.minute}\n');
+    File('assets\\scripts\\Tasksch.bat').writeAsStringSync('@rem Event\n@echo off\nchcp 850\nfor /f "tokens=1,2 delims==" %%a in (${Directory.current.path}\\assets\\scripts\\config.ini) do (\n    if %%a==mytime set mytime=%%b\n    if %%a==day set day=%%b\n)\nschtasks /create /sc weekly /d %day% /tn hardtime /sd %date:~-10% /st %mytime% /tr ${Directory.current.path}\\assets\\scripts\\Backup.bat');
+    File('assets\\scripts\\Backup.bat').writeAsStringSync('start \\b ${Directory.current.path}\\assets\\scripts\\load.exe \\\\.\\${backupToDisk.substring(0, 2)}\nset mydate=%DATE:~3,2%-%DATE:~0,2%-%DATE:~6,4%\nxcopy /y /o /e /d:%mydate% "$diskToBackup" "$backupToDisk"\nstart \\b ${Directory.current.path}\\assets\\scripts\\eject.exe \\\\.\\${backupToDisk.substring(0, 2)}');*/
   }
 }
