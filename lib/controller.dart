@@ -1,7 +1,8 @@
-import 'dart:io' show Directory;
-import 'package:path/path.dart' as path;
+import 'dart:io' show Directory, Platform;
+//import 'package:path/path.dart' as path;
 import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart' as pffi;
+import 'package:path/path.dart' as path;
 
 class Drive extends ffi.Struct {
   external ffi.Pointer<pffi.Utf8> letter;
@@ -26,11 +27,12 @@ typedef CopyDirNative = ffi.Void Function(
 typedef CopyDir = void Function(
     ffi.Pointer<pffi.Utf8> from, ffi.Pointer<pffi.Utf8> to);
 
-final cppLibsPath = path.windows.join(Directory.current.path,
-    'data/flutter_assets/assets/cpp_libs/process_monitor.dll');
+/*final cppLibsPath = path.windows.join(Directory.current.path,
+    'data\\flutter_assets\\assets\\cpp_libs\\process_monitor.dll');*/
 //final cppLibsPath = path.windows.join(Directory.current.path, 'assets\\cpp_libs\\process_monitor.dll');
-
-final cppLibsDll = ffi.DynamicLibrary.open(cppLibsPath);
+var dllpath = path.join(
+    '${Directory.current.path}\\data\\flutter_assets\\assets\\cpp_libs\\process_monitor.dll');
+final cppLibsDll = ffi.DynamicLibrary.open(dllpath);
 
 class Controller {
   String processLog = "Process log";

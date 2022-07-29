@@ -18,9 +18,8 @@ class MyApp extends StatelessWidget {
       return MaterialApp(
         builder: (BuildContext context, Widget? widget){
           ErrorWidget.builder = (FlutterErrorDetails errorDetails){
-            writeLog(errorDetails.informationCollector.toString());
-            writeLog(errorDetails.context.toString());
-            (errorDetails.library != null) ? writeLog(errorDetails.library!) : writeLog("");
+            writeLog(errorDetails.exceptionAsString());
+            writeLog(errorDetails.stack.toString());
             return Scaffold(
               appBar: AppBar(
                 title: const Text("Error message"),
@@ -28,9 +27,8 @@ class MyApp extends StatelessWidget {
               body: Center(
                 child: Column(
                   children: [
-                    Text(errorDetails.informationCollector.toString()),
-                    Text(errorDetails.context.toString()),
-                    Text(errorDetails.library!),
+                    Text(errorDetails.exceptionAsString()),
+                    Text(errorDetails.stack.toString()),
                   ],
                 ),
               ),
