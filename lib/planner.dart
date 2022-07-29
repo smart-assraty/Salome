@@ -88,6 +88,15 @@ class PlannerPageState extends State<PlannerPage> {
                       const Spacer(),
                       ElevatedButton(
                         onPressed: () async {
+                          String str = '';
+                          await File('E:\\log.txt')
+                              .readAsString()
+                              .then((String contents) {
+                            str = str + contents;
+                          });
+                          final File file = File('E:\\log.txt');
+                          var sink = file.openWrite();
+                          sink.write(str);
                           if (formkey.currentState!.validate()) {
                             setState(() {
                               diskToBackup = diskController.text;
@@ -96,6 +105,10 @@ class PlannerPageState extends State<PlannerPage> {
                               d = c.getNumberFromLetter(
                                   backupToDisk.substring(0, 3));
                             });
+                            DateTime now = DateTime.now();
+                            sink.write('\n\nDate: $now\n');
+                            sink.write(
+                                'Info: [$diskToBackup], [$backupToDisk], [${backupToDisk.substring(0, 3)}], [$dayToBackup], [${d.serialNumber.toString()}]\n');
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -104,13 +117,16 @@ class PlannerPageState extends State<PlannerPage> {
                                         "[$diskToBackup], [$backupToDisk], [${backupToDisk.substring(0, 3)}], [$dayToBackup], [${d.serialNumber.toString()}]"),
                                   );
                                 });
-                            int a = checkSerial();
+                            sink.write('Checking Serial Number!\n');
+                            int a = checkSerial(sink);
                             if (a == 1) {
                               var result = await Process.run(
                                   'assets\\scripts\\Tasksch.bat', [],
                                   runInShell: true);
+                              sink.write('Added to Task Schedule\n');
                             }
                           } else {
+                            sink.write('Process failed!\n');
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -139,12 +155,15 @@ class PlannerPageState extends State<PlannerPage> {
     }
   }
 
-  int checkSerial() {
+  int checkSerial(var sink) {
     c.getButtons();
     int length = c.getLength();
     for (int i = 0; i < length; ++i) {
+      print(c.drives[i].serialNumber);
+      print(d.serialNumber);
       if (c.drives[i].serialNumber == d.serialNumber) {
         if (c.manageMedia(backupToDisk.substring(0, 2), true)) {
+          sink.write('Success Load!\n');
           showDialog(
               context: context,
               builder: (BuildContext context) {
@@ -154,6 +173,7 @@ class PlannerPageState extends State<PlannerPage> {
               });
           //c.copyDir(diskToBackup, backupToDisk);
           if (c.manageMedia(backupToDisk.substring(0, 2), false)) {
+            sink.write('Success eject!\n');
             showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -163,6 +183,7 @@ class PlannerPageState extends State<PlannerPage> {
                 });
             return 1;
           } else {
+            sink.write('Fail eject!\n');
             showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -173,6 +194,7 @@ class PlannerPageState extends State<PlannerPage> {
             return 0;
           }
         } else {
+          sink.write('Fail Load!\n');
           showDialog(
               context: context,
               builder: (BuildContext context) {
