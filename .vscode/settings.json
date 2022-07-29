@@ -1,3 +1,8 @@
+<<<<<<< HEAD
 {
     "cmake.configureOnOpen": false
+=======
+{
+    "cmake.configureOnOpen": false
+>>>>>>> 1b4da43d5dac3742e506c65c0838f27acda9e230
 }

@@ -1,7 +1,15 @@
 {
   "ExpandedNodes": [
+<<<<<<< HEAD
+    "",
+    "\\windows",
+    "\\windows\\flutter"
+  ],
+  "SelectedNode": "\\windows\\flutter\\CMakeLists.txt",
+=======
     ""
   ],
   "SelectedNode": "\\C:\\Users\\Фархад\\Desktop\\Salome",
+>>>>>>> 1b4da43d5dac3742e506c65c0838f27acda9e230
   "PreviewInSolutionExplorer": false
 }
